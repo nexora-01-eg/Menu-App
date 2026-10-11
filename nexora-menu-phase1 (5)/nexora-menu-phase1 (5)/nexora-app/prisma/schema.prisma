@@ -1,0 +1,321 @@
+// ═══════════════════════════════════════════════════════════════
+//  NEXORA MENU — Database Schema
+//  Multi-restaurant architecture: a User can own or staff multiple
+//  Restaurants; each Restaurant has many Branches, and its menu
+//  content (Categories/Products) is scoped by restaurantId so every
+//  query is naturally tenant-isolated.
+// ═══════════════════════════════════════════════════════════════
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Auth / Identity
+// Supabase Auth owns the credential (email/password, OAuth); this
+// table mirrors the auth.users row via matching `id` so Prisma can
+// join business data to an authenticated user.
+// ─────────────────────────────────────────────────────────────
+model User {
+  id        String   @id @default(uuid()) // matches supabase.auth.users.id
+  email     String   @unique
+  name      String?
+  avatarUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  memberships RestaurantMember[]
+
+  @@map("users")
+}
+
+enum MemberRole {
+  OWNER
+  MANAGER
+  STAFF
+}
+
+// Join table enabling multi-restaurant, multi-user access:
+// one user can belong to many restaurants, one restaurant can
+// have many staff — with a role per relationship.
+model RestaurantMember {
+  id           String     @id @default(uuid())
+  userId       String
+  restaurantId String
+  role         MemberRole @default(STAFF)
+  createdAt    DateTime   @default(now())
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, restaurantId])
+  @@index([restaurantId])
+  @@map("restaurant_members")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Restaurant (tenant root)
+// ─────────────────────────────────────────────────────────────
+model Restaurant {
+  id          String   @id @default(uuid())
+  slug        String   @unique // public menu URL: nexora.menu/[slug]
+  name        String
+  description String?
+  logoUrl     String?
+  coverUrl    String?
+
+  businessType String? // "restaurant" | "cafe" | "lounge" | "cloud_kitchen" | "food_truck"
+  country      String?
+  currency     String  @default("USD")
+  language     String  @default("en")
+  timezone     String  @default("UTC")
+
+  // Extended profile (Phase 2 — Restaurant Profile)
+  website       String?
+  tiktok        String?
+  workingHours  Json? // { mon: {open, close, closed}, tue: {...}, ... }
+
+  // Settings (Phase 3 — Restaurant Settings)
+  taxRate              Decimal? @db.Decimal(5, 2) // percent, e.g. 14.00
+  serviceFeePercent    Decimal? @db.Decimal(5, 2)
+  orderingEnabled      Boolean  @default(true)
+  whatsappOrderTemplate String?
+
+  // Theme — lets each tenant tint their customer-facing menu
+  themeAccent String  @default("#C89B3C")
+  themeMode   String  @default("dark") // "dark" | "light" | "auto"
+
+  // Contact / social
+  phone     String?
+  whatsapp  String?
+  facebook  String?
+  instagram String?
+  googleMapsUrl String?
+
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  members    RestaurantMember[]
+  branches   Branch[]
+  categories Category[]
+  products   Product[]
+  offers     Offer[]
+  qrCodes    QrCode[]
+  events     AnalyticsEvent[]
+  subscription Subscription?
+
+  @@index([slug])
+  @@map("restaurants")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Branches — one restaurant, many physical locations
+// ─────────────────────────────────────────────────────────────
+model Branch {
+  id           String   @id @default(uuid())
+  restaurantId String
+  name         String
+  address      String?
+  phone        String?
+  whatsapp     String?
+  latitude     Float?
+  longitude    Float?
+  hours        Json? // { mon: {open, close}, tue: {...}, ... }
+  isPrimary    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  qrCodes    QrCode[]
+
+  @@index([restaurantId])
+  @@map("branches")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Menu content
+// ─────────────────────────────────────────────────────────────
+model Category {
+  id           String   @id @default(uuid())
+  restaurantId String
+  name         String
+  sortOrder    Int      @default(0)
+  createdAt    DateTime @default(now())
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  products   Product[]
+
+  @@index([restaurantId])
+  @@map("categories")
+}
+
+model Product {
+  id           String   @id @default(uuid())
+  restaurantId String
+  categoryId   String
+  name         String
+  description  String?
+  imageUrl     String?
+
+  price      Decimal @db.Decimal(10, 2)
+  oldPrice   Decimal? @db.Decimal(10, 2) // strikethrough price
+  offerPrice Decimal? @db.Decimal(10, 2) // active-promo price
+
+  isAvailable Boolean  @default(true)
+  isFeatured  Boolean  @default(false)
+  sortOrder   Int      @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  category   Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@index([restaurantId])
+  @@index([categoryId])
+  @@map("products")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Offers — happy hour, coupons, promo banners
+// ─────────────────────────────────────────────────────────────
+enum OfferType {
+  HAPPY_HOUR
+  COUPON
+  BANNER
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED
+}
+
+enum OfferStatus {
+  ACTIVE
+  PAUSED
+  ARCHIVED
+}
+
+model Offer {
+  id           String       @id @default(uuid())
+  restaurantId String
+  type         OfferType
+  title        String
+  description  String?
+  code         String? // coupon code, if applicable
+
+  discountType  DiscountType @default(PERCENTAGE)
+  discountValue Decimal      @db.Decimal(10, 2)
+
+  // Scheduling
+  startDate DateTime?
+  endDate   DateTime?
+  timeStart String? // "17:00" — daily window start, mainly for Happy Hour
+  timeEnd   String? // "19:00" — daily window end
+
+  // Targeting — scalar refs (not Prisma relations) so this stays
+  // additive without touching Branch/Product/Category models. Server
+  // Actions validate these belong to the same restaurant.
+  branchId   String?
+  productId  String?
+  categoryId String?
+
+  status    OfferStatus @default(ACTIVE)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@index([restaurantId])
+  @@index([restaurantId, status])
+  @@map("offers")
+}
+
+// ─────────────────────────────────────────────────────────────
+// QR Codes — unlimited per restaurant/branch, style stored as JSON
+// so the QR Studio can re-render an exact past design.
+// ─────────────────────────────────────────────────────────────
+model QrCode {
+  id           String   @id @default(uuid())
+  restaurantId String
+  branchId     String?
+  label        String   @default("Table QR")
+  style        Json // { fgColor, cornerStyle, hasLogo, frameText }
+  scanCount    Int      @default(0)
+  createdAt    DateTime @default(now())
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  branch     Branch?    @relation(fields: [branchId], references: [id], onDelete: SetNull)
+
+  @@index([restaurantId])
+  @@map("qr_codes")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Analytics — raw event log; aggregated in queries/materialized
+// views for the dashboard (kept append-only and cheap to write).
+// ─────────────────────────────────────────────────────────────
+enum AnalyticsEventType {
+  VIEW
+  SCAN
+  PRODUCT_CLICK
+  WHATSAPP_CLICK
+  CALL_CLICK
+  SHARE
+  CATEGORY_VIEW
+  SEARCH
+}
+
+model AnalyticsEvent {
+  id           String             @id @default(uuid())
+  restaurantId String
+  type         AnalyticsEventType
+  meta         Json? // { productId?, device?, browser? }
+  createdAt    DateTime           @default(now())
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@index([restaurantId, createdAt])
+  @@map("analytics_events")
+}
+
+// ─────────────────────────────────────────────────────────────
+// Subscription — one per restaurant, mirrors Stripe state
+// ─────────────────────────────────────────────────────────────
+enum PlanTier {
+  FREE
+  STARTER
+  PRO
+  BUSINESS
+  ENTERPRISE
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  TRIALING
+  PAST_DUE
+  CANCELED
+  INCOMPLETE
+}
+
+model Subscription {
+  id                   String             @id @default(uuid())
+  restaurantId         String             @unique
+  plan                 PlanTier           @default(FREE)
+  status               SubscriptionStatus @default(ACTIVE)
+  stripeCustomerId     String?            @unique
+  stripeSubscriptionId String?            @unique
+  currentPeriodEnd     DateTime?
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
+}

@@ -1,0 +1,101 @@
+{
+  "common": {
+    "signIn": "Sign in",
+    "getStarted": "Get Started — It's Free",
+    "startFreeTrial": "Start Free Trial",
+    "language": "Language"
+  },
+  "nav": {
+    "product": "Product",
+    "showcase": "Showcase",
+    "pricing": "Pricing",
+    "faq": "FAQ"
+  },
+  "hero": {
+    "eyebrow": "AI-Powered Digital Menus",
+    "titleLine1": "The menu, reimagined",
+    "titleLine2": "for modern dining.",
+    "description": "NEXORA turns a single QR code into a living menu — instant updates, real-time analytics, and a guest experience that feels as premium as your kitchen.",
+    "watchDemo": "Watch Demo",
+    "restaurantsLive": "Restaurants Live",
+    "monthlyScans": "Monthly Scans",
+    "averageRating": "Average Rating"
+  },
+  "footer": {
+    "tagline": "The luxury digital menu platform for restaurants, cafés, and lounges.",
+    "product": "Product",
+    "company": "Company",
+    "legal": "Legal",
+    "rights": "All rights reserved.",
+    "poweredBy": "Powered by"
+  },
+  "auth": {
+    "loginTitle": "Welcome back",
+    "loginSubtitle": "Sign in to manage your restaurant's menu.",
+    "registerTitle": "Create your account",
+    "registerSubtitle": "Start your 14-day free trial — no card required.",
+    "fullName": "Full name",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot password?",
+    "createAccount": "Create account",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?",
+    "startFree": "Start free trial",
+    "resetPasswordTitle": "Reset your password",
+    "resetPasswordSubtitle": "Enter your email and we'll send you a reset link.",
+    "sendResetLink": "Send reset link",
+    "backToLogin": "Back to sign in",
+    "resetLinkSentTitle": "Check your email",
+    "resetLinkSentBody": "If an account exists for that address, a password reset link is on its way.",
+    "newPasswordTitle": "Set a new password",
+    "newPasswordSubtitle": "Choose a new password for your account.",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "updatePassword": "Update password",
+    "passwordMismatch": "Passwords don't match."
+  },
+  "dashboardNav": {
+    "workspace": "Workspace",
+    "dashboard": "Dashboard",
+    "restaurantProfile": "Restaurant Profile",
+    "qrStudio": "QR Studio",
+    "menuBuilder": "Menu Builder",
+    "offers": "Offers",
+    "analytics": "Analytics",
+    "account": "Account",
+    "settings": "Settings",
+    "subscription": "Subscription"
+  },
+  "onboarding": {
+    "step": "Step {current} of {total}",
+    "step1Title": "Tell us about your restaurant",
+    "step1Subtitle": "This becomes your public menu profile.",
+    "restaurantName": "Restaurant name",
+    "businessType": "Business type",
+    "slug": "Menu link",
+    "slugHint": "Guests will visit nexora.menu/{slug}",
+    "step2Title": "How can guests reach you?",
+    "step2Subtitle": "Used for orders and the public menu page.",
+    "phone": "Phone number",
+    "whatsapp": "WhatsApp number",
+    "address": "Address",
+    "country": "Country",
+    "step3Title": "Regional settings",
+    "step3Subtitle": "You can change these anytime in Settings.",
+    "currency": "Currency",
+    "language": "Language",
+    "timezone": "Timezone",
+    "back": "Back",
+    "next": "Continue",
+    "finish": "Create Restaurant",
+    "creating": "Creating your workspace…",
+    "businessTypes": {
+      "restaurant": "Restaurant",
+      "cafe": "Café",
+      "lounge": "Lounge",
+      "cloudKitchen": "Cloud Kitchen",
+      "foodTruck": "Food Truck"
+    }
+  }
+}

@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* shadcn semantic tokens, expressed in HSL and tuned to the
+       NEXORA void/navy/gold palette so every shadcn primitive
+       inherits the brand automatically. */
+    --background: 0 0% 2%; /* #050505 */
+    --foreground: 220 20% 92%; /* #E9E9EE */
+
+    --card: 222 39% 7%; /* #0D1117-ish */
+    --card-foreground: 220 20% 92%;
+
+    --popover: 222 39% 7%;
+    --popover-foreground: 220 20% 92%;
+
+    --primary: 40 57% 51%; /* gold #C89B3C */
+    --primary-foreground: 0 0% 2%;
+
+    --secondary: 217 33% 12%; /* slate #111827 */
+    --secondary-foreground: 220 20% 92%;
+
+    --muted: 217 33% 12%;
+    --muted-foreground: 220 12% 62%; /* #9099A8 */
+
+    --accent: 217 91% 60%; /* electric blue #3B82F6 */
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 58%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 20% 100% / 0.08;
+    --input: 220 20% 100% / 0.08;
+    --ring: 40 57% 51%;
+
+    --radius: 18px;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "cv11", "ss01";
+  }
+  ::selection {
+    background-color: theme("colors.gold.DEFAULT");
+    color: theme("colors.void");
+  }
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #222;
+    border-radius: 8px;
+  }
+}
+
+@layer utilities {
+  /* One glass-morphism recipe, reused everywhere via the `.glass` class
+     so every card/panel in the product shares identical translucency. */
+  .glass {
+    @apply border border-white/[0.08] bg-gradient-to-b from-white/[0.05] to-white/[0.015] backdrop-blur-xl;
+  }
+  .gold-text {
+    @apply bg-gold-gradient bg-clip-text text-transparent;
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

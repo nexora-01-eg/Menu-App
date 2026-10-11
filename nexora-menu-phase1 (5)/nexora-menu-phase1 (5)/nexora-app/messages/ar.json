@@ -1,0 +1,101 @@
+{
+  "common": {
+    "signIn": "تسجيل الدخول",
+    "getStarted": "ابدأ الآن — مجانًا",
+    "startFreeTrial": "ابدأ تجربتك المجانية",
+    "language": "اللغة"
+  },
+  "nav": {
+    "product": "المنتج",
+    "showcase": "عرض تجريبي",
+    "pricing": "الأسعار",
+    "faq": "الأسئلة الشائعة"
+  },
+  "hero": {
+    "eyebrow": "قوائم رقمية مدعومة بالذكاء الاصطناعي",
+    "titleLine1": "القائمة، بشكل",
+    "titleLine2": "جديد كليًا.",
+    "description": "نيكسورا تحوّل كود QR واحد لقائمة طعام حيّة — تحديثات فورية، تحليلات لحظية، وتجربة ضيوف فاخرة بقدر مطبخك.",
+    "watchDemo": "شاهد العرض التوضيحي",
+    "restaurantsLive": "مطعم يستخدم المنصة",
+    "monthlyScans": "مسح شهري",
+    "averageRating": "متوسط التقييم"
+  },
+  "footer": {
+    "tagline": "منصة القوائم الرقمية الفاخرة للمطاعم والمقاهي والصالات.",
+    "product": "المنتج",
+    "company": "الشركة",
+    "legal": "قانوني",
+    "rights": "جميع الحقوق محفوظة.",
+    "poweredBy": "بدعم من"
+  },
+  "auth": {
+    "loginTitle": "أهلاً بعودتك",
+    "loginSubtitle": "سجّل دخولك لإدارة قائمة مطعمك.",
+    "registerTitle": "أنشئ حسابك",
+    "registerSubtitle": "ابدأ تجربتك المجانية لمدة 14 يومًا — بدون بطاقة ائتمان.",
+    "fullName": "الاسم الكامل",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "createAccount": "إنشاء الحساب",
+    "noAccount": "ليس لديك حساب؟",
+    "haveAccount": "لديك حساب بالفعل؟",
+    "startFree": "ابدأ تجربتك المجانية",
+    "resetPasswordTitle": "إعادة تعيين كلمة المرور",
+    "resetPasswordSubtitle": "أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة التعيين.",
+    "sendResetLink": "إرسال رابط إعادة التعيين",
+    "backToLogin": "العودة لتسجيل الدخول",
+    "resetLinkSentTitle": "تحقق من بريدك الإلكتروني",
+    "resetLinkSentBody": "إذا كان هناك حساب بهذا البريد، فسيصلك رابط إعادة تعيين كلمة المرور قريبًا.",
+    "newPasswordTitle": "تعيين كلمة مرور جديدة",
+    "newPasswordSubtitle": "اختر كلمة مرور جديدة لحسابك.",
+    "newPassword": "كلمة المرور الجديدة",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "updatePassword": "تحديث كلمة المرور",
+    "passwordMismatch": "كلمتا المرور غير متطابقتين."
+  },
+  "dashboardNav": {
+    "workspace": "مساحة العمل",
+    "dashboard": "الرئيسية",
+    "restaurantProfile": "ملف المطعم",
+    "qrStudio": "استوديو QR",
+    "menuBuilder": "بناء القائمة",
+    "offers": "العروض",
+    "analytics": "التحليلات",
+    "account": "الحساب",
+    "settings": "الإعدادات",
+    "subscription": "الاشتراك"
+  },
+  "onboarding": {
+    "step": "الخطوة {current} من {total}",
+    "step1Title": "خبّرنا عن مطعمك",
+    "step1Subtitle": "هذه بيانات ملفك العام في القائمة.",
+    "restaurantName": "اسم المطعم",
+    "businessType": "نوع النشاط",
+    "slug": "رابط القائمة",
+    "slugHint": "الضيوف هيدخلوا على nexora.menu/{slug}",
+    "step2Title": "إزاي الضيوف يتواصلوا معاك؟",
+    "step2Subtitle": "بيُستخدم للطلبات وصفحة القائمة العامة.",
+    "phone": "رقم الهاتف",
+    "whatsapp": "رقم الواتساب",
+    "address": "العنوان",
+    "country": "الدولة",
+    "step3Title": "الإعدادات الإقليمية",
+    "step3Subtitle": "تقدر تغيّرها في أي وقت من الإعدادات.",
+    "currency": "العملة",
+    "language": "اللغة",
+    "timezone": "المنطقة الزمنية",
+    "back": "رجوع",
+    "next": "التالي",
+    "finish": "إنشاء المطعم",
+    "creating": "جاري إنشاء مساحة العمل…",
+    "businessTypes": {
+      "restaurant": "مطعم",
+      "cafe": "كافيه",
+      "lounge": "لاونج",
+      "cloudKitchen": "مطبخ سحابي",
+      "foodTruck": "عربة طعام"
+    }
+  }
+}
